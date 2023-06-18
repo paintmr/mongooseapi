@@ -1,7 +1,7 @@
 const express = require('express')
-require('./db/mongoose')
-const User = require('./models/user')
-const Task = require('./models/task')
+require('./src/db/mongoose')
+const User = require('./src/models/user')
+const Task = require('./src/models/task')
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -101,7 +101,8 @@ app.put('/task/:id', async (req, res) => {
     if (req.params.id.length === 12 || req.params.id.length === 24) {
       // const task = await Task.findByIdAndUpdate(req.params.id, { description: req.body.description }).exec(); //findByIdAndUpdate默认返回的是修改前的数据
       // 如果要返回修改后的数据，给findByIdAndUpdate()加参数{ new: true }
-      const task = await Task.findByIdAndUpdate(req.params.id, { description: req.body.description }, { new: true }).exec();
+      // 如果要检查修改后的数据是否符合在schema中定义的规则，可以添加runValidators:true
+      const task = await Task.findByIdAndUpdate(req.params.id, { description: req.body.description }, { new: true, runValidators: true }).exec();
 
       console.log(task)
       if (task) {
